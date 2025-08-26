@@ -1,0 +1,1674 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Pelayanan Publik API",
+        "description": "API Backend untuk Aplikasi Pelayanan Publik",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Development Server"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Login",
+                "operationId": "1ff9c65c5cd1a8e0786e318eed856972",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@pelayanpublik.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "admin123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login berhasil"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Registration",
+                "operationId": "c47a1b563e5e8bc3c7b962f893981e84",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registration successful"
+                    }
+                }
+            }
+        },
+        "/auth/profile": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get User Profile",
+                "operationId": "fbc33ac6296afc79593f63a82776f198",
+                "responses": {
+                    "200": {
+                        "description": "Profile retrieved successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Logout",
+                "operationId": "eae6a8251a6469bbabe454860f64cf37",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/berita": {
+            "get": {
+                "tags": [
+                    "Berita"
+                ],
+                "summary": "Get all berita",
+                "operationId": "106b2395ee105cc16df2ca30510011b8",
+                "parameters": [
+                    {
+                        "name": "kategori",
+                        "in": "query",
+                        "description": "Filter by kategori ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by title or content",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of berita"
+                    }
+                }
+            }
+        },
+        "/berita/{id}": {
+            "get": {
+                "tags": [
+                    "Berita"
+                ],
+                "summary": "Get single berita",
+                "operationId": "5cc8f589f24b393b48692be6850c829e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berita details"
+                    }
+                }
+            }
+        },
+        "/admin/berita": {
+            "post": {
+                "tags": [
+                    "Berita"
+                ],
+                "summary": "Create new berita",
+                "operationId": "8875d632720556b90651f94fd5bfb714",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "judul": {
+                                        "type": "string"
+                                    },
+                                    "isi": {
+                                        "type": "string"
+                                    },
+                                    "gambar": {
+                                        "type": "file"
+                                    },
+                                    "id_kategori": {
+                                        "type": "integer"
+                                    },
+                                    "is_published": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Berita created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/berita/{id}": {
+            "put": {
+                "tags": [
+                    "Berita"
+                ],
+                "summary": "Update berita",
+                "operationId": "6adbc479240cbad1ea0d75c13ae4a37a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berita updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Berita"
+                ],
+                "summary": "Delete berita",
+                "operationId": "f5d55c78188f6b095a202e237414d49e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berita deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/home": {
+            "get": {
+                "tags": [
+                    "Berita"
+                ],
+                "summary": "Get home data with latest berita",
+                "operationId": "1fa01f08c84fa032791f3e02cf35bf27",
+                "responses": {
+                    "200": {
+                        "description": "Home data with latest berita"
+                    }
+                }
+            }
+        },
+        "/jenis-layanan": {
+            "get": {
+                "tags": [
+                    "Jenis Layanan"
+                ],
+                "summary": "Get all jenis layanan",
+                "operationId": "e81818ddd8f77620bb6ff6da73965a04",
+                "responses": {
+                    "200": {
+                        "description": "List of jenis layanan"
+                    }
+                }
+            }
+        },
+        "/jenis-layanan/{id}": {
+            "get": {
+                "tags": [
+                    "Jenis Layanan"
+                ],
+                "summary": "Get single jenis layanan with layanans",
+                "operationId": "886d66616597a8dc50da9ff63920e36b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Jenis layanan with layanans"
+                    }
+                }
+            }
+        },
+        "/admin/jenis-layanan": {
+            "post": {
+                "tags": [
+                    "Jenis Layanan"
+                ],
+                "summary": "Create new jenis layanan",
+                "operationId": "e5089cbf0787693cbaa14aa1180400ee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "nama_jenis": {
+                                        "type": "string"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string"
+                                    },
+                                    "icon": {
+                                        "type": "file"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Jenis layanan created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/jenis-layanan/{id}": {
+            "put": {
+                "tags": [
+                    "Jenis Layanan"
+                ],
+                "summary": "Update jenis layanan",
+                "operationId": "e8b8092f65c65de407352cde5c55b6ee",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Jenis layanan updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Jenis Layanan"
+                ],
+                "summary": "Delete jenis layanan",
+                "operationId": "97f044204a3035df5d37520496a7afdd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Jenis layanan deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/kategori-berita": {
+            "get": {
+                "tags": [
+                    "Kategori Berita"
+                ],
+                "summary": "Get all kategori berita",
+                "description": "/**",
+                "operationId": "eff0026503bb0721dc7bb55277eefe7b",
+                "responses": {
+                    "200": {
+                        "description": "List of kategori berita",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Kategori berita berhasil diambil"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id_kategori": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "nama_kategori": {
+                                                        "type": "string",
+                                                        "example": "Pengumuman"
+                                                    },
+                                                    "deskripsi": {
+                                                        "type": "string",
+                                                        "example": "Kategori untuk pengumuman resmi"
+                                                    },
+                                                    "beritas_count": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-08-23T10:00:00Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-08-23T12:00:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/kategori-berita": {
+            "post": {
+                "tags": [
+                    "Kategori Berita"
+                ],
+                "summary": "Create new kategori berita",
+                "operationId": "d3d520d9d03b5dad3a8370ec3a443f86",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama_kategori"
+                                ],
+                                "properties": {
+                                    "nama_kategori": {
+                                        "type": "string",
+                                        "example": "Pengumuman"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string",
+                                        "example": "Kategori untuk pengumuman resmi"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Kategori berita created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/kategori-berita/{id}": {
+            "get": {
+                "tags": [
+                    "Kategori Berita"
+                ],
+                "summary": "Get single kategori berita",
+                "operationId": "1effc9a573e7b43430ecb0f6f84996c1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Kategori berita details"
+                    },
+                    "404": {
+                        "description": "Kategori berita not found"
+                    }
+                }
+            }
+        },
+        "/admin/kategori-berita/{id}": {
+            "put": {
+                "tags": [
+                    "Kategori Berita"
+                ],
+                "summary": "Update kategori berita",
+                "operationId": "2f8e982465ce7cf01c10f600d28401fc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nama_kategori": {
+                                        "type": "string",
+                                        "example": "Pengumuman Updated"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string",
+                                        "example": "Deskripsi updated"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kategori berita updated successfully"
+                    },
+                    "404": {
+                        "description": "Kategori berita not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Kategori Berita"
+                ],
+                "summary": "Delete kategori berita",
+                "operationId": "4263911b4bf23ad8b6221f81688c64a3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Kategori berita deleted successfully"
+                    },
+                    "404": {
+                        "description": "Kategori berita not found"
+                    },
+                    "400": {
+                        "description": "Cannot delete kategori with existing berita"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/kategori-berita/{id}/berita": {
+            "get": {
+                "tags": [
+                    "Kategori Berita"
+                ],
+                "summary": "Get berita by kategori",
+                "operationId": "3f69a182248a4bd043873e40ba09339e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of berita to return",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berita by kategori"
+                    }
+                }
+            }
+        },
+        "/layanan": {
+            "get": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Get all layanan publik",
+                "operationId": "9f105eb8582bf1cff15e81aa8fa8216c",
+                "parameters": [
+                    {
+                        "name": "jenis",
+                        "in": "query",
+                        "description": "Filter by jenis layanan ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "online",
+                        "in": "query",
+                        "description": "Filter online layanan only",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search layanan",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of layanan"
+                    }
+                }
+            }
+        },
+        "/layanan/{id}": {
+            "get": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Get single layanan",
+                "operationId": "f0ab4c34c08a0ed2ad482b007dce25cd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Layanan details"
+                    }
+                }
+            }
+        },
+        "/admin/layanan": {
+            "post": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Create new layanan",
+                "operationId": "4a7415b41bd29e747d2b6a173f1b3497",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama_layanan",
+                                    "deskripsi",
+                                    "syarat_prosedur",
+                                    "id_jenis_layanan"
+                                ],
+                                "properties": {
+                                    "nama_layanan": {
+                                        "type": "string"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string"
+                                    },
+                                    "syarat_prosedur": {
+                                        "type": "string"
+                                    },
+                                    "id_jenis_layanan": {
+                                        "type": "integer"
+                                    },
+                                    "durasi_pelayanan": {
+                                        "type": "string"
+                                    },
+                                    "biaya": {
+                                        "type": "number"
+                                    },
+                                    "is_online": {
+                                        "type": "boolean"
+                                    },
+                                    "link_online": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Layanan created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/layanan/{id}": {
+            "put": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Update layanan",
+                "operationId": "e04572f4f80391295efdadde7f60d26b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Layanan updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Delete layanan",
+                "operationId": "76ef83deb672e4510f3bc1d4ea8df9f2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Layanan deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifikasi": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Get user notifications",
+                "operationId": "3941d2dc81b131274651bea04ed85340",
+                "parameters": [
+                    {
+                        "name": "jenis",
+                        "in": "query",
+                        "description": "Filter by jenis",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "info",
+                                "peringatan",
+                                "sukses",
+                                "error",
+                                "pengumuman"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "kategori",
+                        "in": "query",
+                        "description": "Filter by kategori",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "system",
+                                "layanan",
+                                "berita",
+                                "saran",
+                                "custom"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "unread_only",
+                        "in": "query",
+                        "description": "Show unread only",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of user notifications"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifikasi/{id}": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Get single notification",
+                "operationId": "5834fcf379923b1d1008a789244223da",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification details"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Delete notification",
+                "operationId": "828c453b6ffd56fe0a11c1f6e8eebd9e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifikasi/{id}/read": {
+            "put": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Mark notification as read",
+                "operationId": "f6b4be1700affe288adb60ce1d5b871b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification marked as read"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifikasi/read-all": {
+            "put": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Mark all notifications as read",
+                "operationId": "e150d1c58febd0ab0b12fa0d7d6aab73",
+                "responses": {
+                    "200": {
+                        "description": "All notifications marked as read"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifikasi-count": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Get unread notification count",
+                "operationId": "d2cae948908a0dff1094236e9b451fd5",
+                "responses": {
+                    "200": {
+                        "description": "Unread notification count"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/notifikasi": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Get all notifications for admin",
+                "operationId": "a24ecbfb9a0e3cdd8bf0782638f26b9e",
+                "responses": {
+                    "200": {
+                        "description": "List of all notifications"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Create new notification",
+                "operationId": "635dcb6b0a43a8204b31994884ef23ad",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "judul",
+                                    "isi"
+                                ],
+                                "properties": {
+                                    "judul": {
+                                        "type": "string"
+                                    },
+                                    "isi": {
+                                        "type": "string"
+                                    },
+                                    "jenis": {
+                                        "type": "string",
+                                        "enum": [
+                                            "info",
+                                            "peringatan",
+                                            "sukses",
+                                            "error",
+                                            "pengumuman"
+                                        ]
+                                    },
+                                    "kategori": {
+                                        "type": "string",
+                                        "enum": [
+                                            "system",
+                                            "layanan",
+                                            "berita",
+                                            "saran",
+                                            "custom"
+                                        ]
+                                    },
+                                    "priority": {
+                                        "type": "string",
+                                        "enum": [
+                                            "low",
+                                            "normal",
+                                            "high",
+                                            "urgent"
+                                        ]
+                                    },
+                                    "is_broadcast": {
+                                        "type": "boolean"
+                                    },
+                                    "id_pengguna": {
+                                        "type": "integer"
+                                    },
+                                    "action_url": {
+                                        "type": "string"
+                                    },
+                                    "action_text": {
+                                        "type": "string"
+                                    },
+                                    "expired_at": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Notification created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/notifikasi/broadcast": {
+            "post": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Send broadcast notification",
+                "operationId": "7c6757c0aa1eaf8226089b9f0bf56168",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "judul",
+                                    "isi"
+                                ],
+                                "properties": {
+                                    "judul": {
+                                        "type": "string"
+                                    },
+                                    "isi": {
+                                        "type": "string"
+                                    },
+                                    "jenis": {
+                                        "type": "string",
+                                        "enum": [
+                                            "info",
+                                            "peringatan",
+                                            "sukses",
+                                            "error",
+                                            "pengumuman"
+                                        ]
+                                    },
+                                    "kategori": {
+                                        "type": "string",
+                                        "enum": [
+                                            "system",
+                                            "layanan",
+                                            "berita",
+                                            "saran",
+                                            "custom"
+                                        ]
+                                    },
+                                    "priority": {
+                                        "type": "string",
+                                        "enum": [
+                                            "low",
+                                            "normal",
+                                            "high",
+                                            "urgent"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Broadcast notification sent"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/notifikasi/{id}": {
+            "delete": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Delete notification (admin)",
+                "operationId": "091e3427a268903e8a311f465433a18f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/notifikasi/statistics": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Get notification statistics",
+                "operationId": "3b7679cf65b8b5bf14747bb0b0049862",
+                "responses": {
+                    "200": {
+                        "description": "Notification statistics"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/saran": {
+            "get": {
+                "tags": [
+                    "Saran & Bantuan"
+                ],
+                "summary": "Get public saran list",
+                "operationId": "a6e1e4848248bb614be22417b6d0029a",
+                "parameters": [
+                    {
+                        "name": "jenis",
+                        "in": "query",
+                        "description": "Filter by jenis saran",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "saran",
+                                "keluhan",
+                                "kritik",
+                                "pertanyaan"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search saran",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of public saran"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Saran & Bantuan"
+                ],
+                "summary": "Submit new saran",
+                "operationId": "9db2b552ae4b821aeb811abbecdf4c8a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "jenis_saran",
+                                    "subjek",
+                                    "isi"
+                                ],
+                                "properties": {
+                                    "jenis_saran": {
+                                        "type": "string",
+                                        "enum": [
+                                            "saran",
+                                            "keluhan",
+                                            "kritik",
+                                            "pertanyaan"
+                                        ]
+                                    },
+                                    "subjek": {
+                                        "type": "string"
+                                    },
+                                    "isi": {
+                                        "type": "string"
+                                    },
+                                    "nama_pengirim": {
+                                        "type": "string"
+                                    },
+                                    "email_pengirim": {
+                                        "type": "string"
+                                    },
+                                    "no_hp": {
+                                        "type": "string"
+                                    },
+                                    "is_anonim": {
+                                        "type": "boolean"
+                                    },
+                                    "lampiran": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "file"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Saran submitted successfully"
+                    }
+                }
+            }
+        },
+        "/saran/{id}": {
+            "get": {
+                "tags": [
+                    "Saran & Bantuan"
+                ],
+                "summary": "Get single saran",
+                "operationId": "1067a38ad35541a344e03af6f950ff4b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Saran details"
+                    }
+                }
+            }
+        },
+        "/my-saran": {
+            "get": {
+                "tags": [
+                    "Saran & Bantuan"
+                ],
+                "summary": "Get user's own saran",
+                "operationId": "f28e75d7d06464bf073aa8d0d99e43b1",
+                "responses": {
+                    "200": {
+                        "description": "User's saran list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/saran": {
+            "get": {
+                "tags": [
+                    "Saran & Bantuan"
+                ],
+                "summary": "Get all saran for admin",
+                "operationId": "d7ba87908c3f093aac7b00d56bf7e325",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "menunggu",
+                                "diproses",
+                                "selesai",
+                                "ditolak"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "prioritas",
+                        "in": "query",
+                        "description": "Filter by prioritas",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "rendah",
+                                "normal",
+                                "tinggi",
+                                "urgent"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all saran for admin"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/saran/{id}/balas": {
+            "put": {
+                "tags": [
+                    "Saran & Bantuan"
+                ],
+                "summary": "Reply to saran",
+                "operationId": "1fabee5860d43b816789ebef8ce35ca6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "balasan_admin",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "balasan_admin": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "diproses",
+                                            "selesai",
+                                            "ditolak"
+                                        ]
+                                    },
+                                    "prioritas": {
+                                        "type": "string",
+                                        "enum": [
+                                            "rendah",
+                                            "normal",
+                                            "tinggi",
+                                            "urgent"
+                                        ]
+                                    },
+                                    "is_public": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reply sent successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/saran/{id}": {
+            "delete": {
+                "tags": [
+                    "Saran & Bantuan"
+                ],
+                "summary": "Delete saran",
+                "operationId": "a870e7d40f07ee2d9ad63d6f927e77e1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Saran deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/saran/statistics": {
+            "get": {
+                "tags": [
+                    "Saran & Bantuan"
+                ],
+                "summary": "Get saran statistics",
+                "operationId": "204c0a0832bb79885c5cb1a2975ff3ab",
+                "responses": {
+                    "200": {
+                        "description": "Saran statistics"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Berita",
+            "description": "Berita management endpoints"
+        },
+        {
+            "name": "Jenis Layanan",
+            "description": "Jenis Layanan management endpoints"
+        },
+        {
+            "name": "Kategori Berita",
+            "description": "Kategori Berita management endpoints"
+        },
+        {
+            "name": "Layanan",
+            "description": "Layanan Publik management endpoints"
+        },
+        {
+            "name": "Notifikasi",
+            "description": "Notifikasi management endpoints"
+        },
+        {
+            "name": "Saran & Bantuan",
+            "description": "Saran dan Bantuan management endpoints"
+        },
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        }
+    ]
+}
